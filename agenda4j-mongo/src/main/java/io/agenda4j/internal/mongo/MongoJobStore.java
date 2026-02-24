@@ -35,10 +35,16 @@ public class MongoJobStore {
 
     private final MongoTemplate mongoTemplate;
     private final ObjectMapper objectMapper;
+    private final String collectionName;
 
     public MongoJobStore(MongoTemplate mongoTemplate, ObjectMapper objectMapper) {
+        this(mongoTemplate, objectMapper, ScheduledJobDocument.DEFAULT_COLLECTION);
+    }
+
+    public MongoJobStore(MongoTemplate mongoTemplate, ObjectMapper objectMapper, String collectionName) {
         this.mongoTemplate = Objects.requireNonNull(mongoTemplate, "mongoTemplate must not be null");
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper must not be null");
+        this.collectionName = isBlank(collectionName) ? ScheduledJobDocument.DEFAULT_COLLECTION : collectionName.trim();
     }
 
     /**
@@ -52,14 +58,14 @@ public class MongoJobStore {
 
         if (spec.type() == JobType.NORMAL && isBlank(spec.uniqueKey())) {
             ScheduledJobDocument doc = toDocument(spec);
-            mongoTemplate.insert(doc);
+            mongoTemplate.insert(doc, collectionName);
             return PersistResult.createdResult();
         }
 
         Query query = buildUpsertQuery(spec);
         Update update = buildUpsertUpdate(spec);
 
-        UpdateResult result = mongoTemplate.upsert(query, update, ScheduledJobDocument.class);
+        UpdateResult result = mongoTemplate.upsert(query, update, ScheduledJobDocument.class, collectionName);
         return result.getUpsertedId() != null ? PersistResult.createdResult() : PersistResult.updatedResult();
     }
 
@@ -191,7 +197,7 @@ public class MongoJobStore {
     public long deleteById(String id) {
         Objects.requireNonNull(id, "id must not be null");
         Query q = new Query(Criteria.where("_id").is(id));
-        return mongoTemplate.remove(q, ScheduledJobDocument.class).getDeletedCount();
+        return mongoTemplate.remove(q, ScheduledJobDocument.class, collectionName).getDeletedCount();
     }
 
     /**
@@ -199,7 +205,7 @@ public class MongoJobStore {
      */
     public ScheduledJobDocument findSingleByName(String name) {
         Query q = new Query(Criteria.where("name").is(name).and("type").is(JobType.SINGLE));
-        return mongoTemplate.findOne(q, ScheduledJobDocument.class);
+        return mongoTemplate.findOne(q, ScheduledJobDocument.class, collectionName);
     }
 
     /**
@@ -209,7 +215,7 @@ public class MongoJobStore {
         Query q = new Query(Criteria.where("name").is(name)
                 .and("type").is(JobType.NORMAL)
                 .and("uniqueKey").is(uniqueKey));
-        return mongoTemplate.findOne(q, ScheduledJobDocument.class);
+        return mongoTemplate.findOne(q, ScheduledJobDocument.class, collectionName);
     }
 
     /**
@@ -223,7 +229,7 @@ public class MongoJobStore {
                         .and("type").is(JobType.SINGLE)
         );
 
-        return mongoTemplate.remove(q, ScheduledJobDocument.class)
+        return mongoTemplate.remove(q, ScheduledJobDocument.class, collectionName)
                 .getDeletedCount();
     }
 
@@ -243,7 +249,7 @@ public class MongoJobStore {
                         .and("type").is(JobType.NORMAL)
                         .and("uniqueKey").is(uniqueKey)
         );
-        return mongoTemplate.remove(q, ScheduledJobDocument.class).getDeletedCount();
+        return mongoTemplate.remove(q, ScheduledJobDocument.class, collectionName).getDeletedCount();
     }
 
     /**
@@ -272,7 +278,7 @@ public class MongoJobStore {
                 .unset("lockUntil")
                 .unset("lockedBy");
 
-        UpdateResult r = mongoTemplate.updateMulti(q, u, ScheduledJobDocument.class);
+        UpdateResult r = mongoTemplate.updateMulti(q, u, ScheduledJobDocument.class, collectionName);
         return r.getModifiedCount();
     }
 
@@ -291,7 +297,7 @@ public class MongoJobStore {
                 .unset("lockUntil")
                 .unset("lockedBy");
 
-        UpdateResult r = mongoTemplate.updateMulti(q, u, ScheduledJobDocument.class);
+        UpdateResult r = mongoTemplate.updateMulti(q, u, ScheduledJobDocument.class, collectionName);
         return r.getModifiedCount();
     }
 
@@ -313,7 +319,7 @@ public class MongoJobStore {
         Query q = new Query(Criteria.where("_id").in(ids));
         Update u = disableUpdate();
 
-        UpdateResult r = mongoTemplate.updateMulti(q, u, ScheduledJobDocument.class);
+        UpdateResult r = mongoTemplate.updateMulti(q, u, ScheduledJobDocument.class, collectionName);
         return r.getModifiedCount();
     }
 
@@ -331,7 +337,7 @@ public class MongoJobStore {
         }
 
         Query q = new Query(Criteria.where("_id").in(ids));
-        return mongoTemplate.remove(q, ScheduledJobDocument.class).getDeletedCount();
+        return mongoTemplate.remove(q, ScheduledJobDocument.class, collectionName).getDeletedCount();
     }
 
     private List<String> selectIdsForQuery(CancelQuery query, int limit) {
@@ -366,7 +372,7 @@ public class MongoJobStore {
         // Only need ids.
         q.fields().include("_id");
 
-        List<ScheduledJobDocument> docs = mongoTemplate.find(q, ScheduledJobDocument.class);
+        List<ScheduledJobDocument> docs = mongoTemplate.find(q, ScheduledJobDocument.class, collectionName);
         List<String> ids = new ArrayList<>(docs.size());
         for (ScheduledJobDocument d : docs) {
             if (d != null && d.getId() != null) {
@@ -460,7 +466,7 @@ public class MongoJobStore {
 
         List<ScheduledJobDocument> claimed = new ArrayList<>(Math.min(batchSize, 64));
         for (int i = 0; i < batchSize; i++) {
-            ScheduledJobDocument doc = mongoTemplate.findAndModify(baseQuery, lockUpdate, options, ScheduledJobDocument.class);
+            ScheduledJobDocument doc = mongoTemplate.findAndModify(baseQuery, lockUpdate, options, ScheduledJobDocument.class, collectionName);
             if (doc == null) {
                 break;
             }
@@ -496,7 +502,7 @@ public class MongoJobStore {
             u.unset("nextRunAt");
         }
 
-        return mongoTemplate.updateFirst(q, u, ScheduledJobDocument.class);
+        return mongoTemplate.updateFirst(q, u, ScheduledJobDocument.class, collectionName);
     }
 
     public UpdateResult markFailure(String id, String workerId, Instant failedAt, Instant nextRunAtOrNull) {
@@ -522,6 +528,6 @@ public class MongoJobStore {
             u.unset("nextRunAt");
         }
 
-        return mongoTemplate.updateFirst(q, u, ScheduledJobDocument.class);
+        return mongoTemplate.updateFirst(q, u, ScheduledJobDocument.class, collectionName);
     }
 }

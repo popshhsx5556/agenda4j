@@ -49,9 +49,17 @@ public class AgendaMongoIndexConfig {
     public static final String UX_SINGLE_NAME = "ux_single_name";
 
     private final MongoTemplate mongoTemplate;
+    private final String collectionName;
 
     public AgendaMongoIndexConfig(MongoTemplate mongoTemplate) {
+        this(mongoTemplate, ScheduledJobDocument.DEFAULT_COLLECTION);
+    }
+
+    public AgendaMongoIndexConfig(MongoTemplate mongoTemplate, String collectionName) {
         this.mongoTemplate = mongoTemplate;
+        this.collectionName = (collectionName == null || collectionName.isBlank())
+                ? ScheduledJobDocument.DEFAULT_COLLECTION
+                : collectionName.trim();
     }
 
     /**
@@ -61,9 +69,9 @@ public class AgendaMongoIndexConfig {
      * Call it explicitly if you want auto-creation in a controlled environment.
      */
     public void ensureIndexes() {
-        mongoTemplate.indexOps(ScheduledJobDocument.class).createIndex(dueClaimIndex());
-        mongoTemplate.indexOps(ScheduledJobDocument.class).createIndex(nameUniqueKeyIndex());
-        mongoTemplate.indexOps(ScheduledJobDocument.class).createIndex(singleNameUniqueIndex());
+        mongoTemplate.indexOps(collectionName).createIndex(dueClaimIndex());
+        mongoTemplate.indexOps(collectionName).createIndex(nameUniqueKeyIndex());
+        mongoTemplate.indexOps(collectionName).createIndex(singleNameUniqueIndex());
     }
 
     /**

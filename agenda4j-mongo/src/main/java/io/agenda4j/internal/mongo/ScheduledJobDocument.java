@@ -11,8 +11,9 @@ import java.util.Map;
 /**
  * Mongo document model for persisted scheduled jobs.
  */
-@Document(collection = "scheduled_jobs")
+@Document(collection = ScheduledJobDocument.DEFAULT_COLLECTION)
 public class ScheduledJobDocument {
+    public static final String DEFAULT_COLLECTION = "scheduled_jobs";
 
     @Id
     private String id;

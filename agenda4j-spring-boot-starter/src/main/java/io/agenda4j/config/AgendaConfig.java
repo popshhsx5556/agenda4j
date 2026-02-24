@@ -6,6 +6,7 @@ import io.agenda4j.JobHandler;
 import io.agenda4j.core.JobHandlerRegistry;
 import io.agenda4j.internal.mongo.MongoAgenda;
 import io.agenda4j.internal.mongo.MongoJobStore;
+import io.agenda4j.internal.mongo.ScheduledJobDocument;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -28,14 +29,14 @@ public class AgendaConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    protected MongoJobStore mongoJobStore(MongoTemplate mongoTemplate, ObjectMapper objectMapper) {
-        return new MongoJobStore(mongoTemplate, objectMapper);
+    protected MongoJobStore mongoJobStore(MongoTemplate mongoTemplate, AgendaProperties props, ObjectMapper objectMapper) {
+        return new MongoJobStore(mongoTemplate, objectMapper, resolveCollectionName(props));
     }
 
     @Bean
     @ConditionalOnMissingBean
-    protected AgendaMongoIndexConfig agendaMongoIndexConfig(MongoTemplate mongoTemplate) {
-        return new AgendaMongoIndexConfig(mongoTemplate);
+    protected AgendaMongoIndexConfig agendaMongoIndexConfig(MongoTemplate mongoTemplate, AgendaProperties props) {
+        return new AgendaMongoIndexConfig(mongoTemplate, resolveCollectionName(props));
     }
 
     @Bean
@@ -61,5 +62,13 @@ public class AgendaConfig {
     @ConditionalOnProperty(prefix = "agenda", name = "ensure-indexes-on-startup", havingValue = "true")
     public org.springframework.beans.factory.SmartInitializingSingleton agendaIndexesInitializer(AgendaMongoIndexConfig indexConfig) {
         return indexConfig::ensureIndexes;
+    }
+
+    private static String resolveCollectionName(AgendaProperties props) {
+        String configured = props.getCollectionName();
+        if (configured == null || configured.isBlank()) {
+            return ScheduledJobDocument.DEFAULT_COLLECTION;
+        }
+        return configured.trim();
     }
 }

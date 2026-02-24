@@ -19,6 +19,7 @@ public class AgendaProperties {
     private boolean cleanupFinishedJobs = true;
     private String workerId;
     private boolean ensureIndexesOnStartup = false;
+    private String collectionName;
 
     public int getMaxConcurrency() {
         return maxConcurrency;
@@ -98,5 +99,13 @@ public class AgendaProperties {
 
     public void setEnsureIndexesOnStartup(boolean ensureIndexesOnStartup) {
         this.ensureIndexesOnStartup = ensureIndexesOnStartup;
+    }
+
+    public String getCollectionName() {
+        return collectionName;
+    }
+
+    public void setCollectionName(String collectionName) {
+        this.collectionName = collectionName;
     }
 }
