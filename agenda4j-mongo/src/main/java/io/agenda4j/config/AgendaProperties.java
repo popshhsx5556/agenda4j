@@ -11,8 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AgendaProperties {
     private int maxConcurrency = 20; // global
     private int defaultConcurrency = 5; // per job name
-    private int lockLimit = 0; // global
-    private int batchSize = 5;
+    private int lockLimit = 40; // global
+    private int batchSize = 20;
     private int maxRetryCount = 5;
     private Duration defaultLockLifetime = Duration.ofMinutes(10);
     private Duration processEvery = Duration.ofSeconds(5);

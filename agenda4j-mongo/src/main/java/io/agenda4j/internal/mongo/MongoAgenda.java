@@ -19,7 +19,6 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Agenda is a Mongo-backed job scheduler &amp; runner.
@@ -61,8 +60,6 @@ public class MongoAgenda implements Agenda {
     private final ConcurrentHashMap<String, Boolean> enqueued = new ConcurrentHashMap<>();
 
     private final Semaphore refillSignal = new Semaphore(0);
-
-    private final AtomicReference<Instant> windowCursor = new AtomicReference<>();
 
     private final Semaphore globalSem;
     private final ConcurrentHashMap<String, Semaphore> perNameSem = new ConcurrentHashMap<>();
@@ -146,8 +143,6 @@ public class MongoAgenda implements Agenda {
                 return t;
             });
         }
-
-        windowCursor.compareAndSet(null, Instant.now());
 
         if (dispatcherThread == null) {
             dispatcherThread = new Thread(this::dispatchLoop);
@@ -384,18 +379,9 @@ public class MongoAgenda implements Agenda {
                 break;
             }
 
-            if (backlog) {
-                try {
-                    refillSignal.tryAcquire(200, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-                continue;
-            }
-
             try {
-                Thread.sleep(props.getProcessEvery().toMillis());
+                Duration idleWait = backlog ? Duration.ofMillis(200) : props.getProcessEvery();
+                refillSignal.tryAcquire(idleWait.toMillis(), TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
@@ -423,13 +409,7 @@ public class MongoAgenda implements Agenda {
     }
 
     private boolean pollOnce() {
-        Instant windowStart = windowCursor.get();
-        if (windowStart == null) {
-            windowStart = Instant.now();
-            windowCursor.set(windowStart);
-        }
-
-        Instant windowEnd = windowStart.plus(props.getProcessEvery());
+        Instant windowEnd = Instant.now().plus(props.getProcessEvery());
 
         int running = props.getMaxConcurrency() - globalSem.availablePermits();
         int inFlight = enqueued.size() + Math.max(0, running);
@@ -443,7 +423,6 @@ public class MongoAgenda implements Agenda {
         }
 
         if (remaining == 0) {
-            windowCursor.set(windowEnd);
             return true;
         }
 
@@ -482,7 +461,6 @@ public class MongoAgenda implements Agenda {
             }
         }
 
-        windowCursor.set(windowEnd);
         return backlog;
     }
 
