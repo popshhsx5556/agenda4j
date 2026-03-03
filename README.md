@@ -41,7 +41,7 @@ Spring Boot integration.
 <dependency>
   <groupId>io.github.harutostudio</groupId>
   <artifactId>agenda4j-spring-boot-starter</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 
@@ -51,12 +51,12 @@ Spring Boot integration.
 <dependency>
   <groupId>io.github.harutostudio</groupId>
   <artifactId>agenda4j-core</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 <dependency>
   <groupId>io.github.harutostudio</groupId>
   <artifactId>agenda4j-mongo</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 

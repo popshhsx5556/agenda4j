@@ -2,10 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2026-02-19
+## [0.1.1] - 2026-03-03
 
 ### Changed
-- Started next development iteration after `0.1.0` release.
+- Reduced polling latency by switching to signal-driven refill waiting.
+- Removed poll window cursor drift by calculating polling window from current time.
+- Updated default polling throughput settings: `lockLimit=40`, `batchSize=20`.
 
 ## [0.1.0] - 2026-02-19
 
